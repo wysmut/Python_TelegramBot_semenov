@@ -1,4 +1,14 @@
+version: '3.8'
+
 services:
+  bot:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/postgres
+    restart: unless-stopped
+
   db:
     image: postgres:16.3
     volumes:
@@ -9,5 +19,7 @@ services:
       POSTGRES_DB: postgres
     ports:
       - 5432:5432
+    restart: unless-stopped
+
 volumes:
   postgres:
