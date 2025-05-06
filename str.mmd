@@ -1,43 +1,34 @@
-mindmap
-  root((Telegram Bot Project))
-    telegram_bot/
-      bot/
-        __init__.py
-        main.py
-        handlers/
-          __init__.py
-          calendar.py:::handler
-          common.py:::handler
-          admin.py:::handler
-        models/
-          __init__.py
-          models.py:::model
-        utils/
-          __init__.py
-          database.py:::util
-          calendar_utils.py:::util
-        secrets.py
-      django_app/
-        manage.py
-        requirements.txt
-        Dockerfile
-        docker-compose.yml
-        app/
-          __init__.py
-          settings.py
-          urls.py
-          wsgi.py
-          admin.py
-          models.py
-          views.py
-          serializers.py
-          tests/
-            __init__.py
-            test_models.py
-            test_views.py
-            test_integration.py
-    README.md
+sequenceDiagram
+    participant User as Пользователь Telegram
+    participant Main as main.py (Бот)
+    participant Handlers as Обработчики
+    participant Utils as Утилиты
+    participant Models as Модели
+    participant Django as Django Приложение
 
-classDef handler fill:#f9f,stroke:#333;
-classDef model fill:#bbf,stroke:#333;
-classDef util fill:#9f9,stroke:#333;
+    User->>Main: Отправляет сообщение/команду
+    Main->>Handlers: Определяет тип сообщения
+    alt Команда администратора
+        Handlers->>Admin: Обработка admin.py
+        Admin->>Models: Работа с данными
+        Models-->>Admin: Возврат данных
+        Admin-->>Main: Формирование ответа
+    else Календарные события
+        Handlers->>Calendar: Обработка calendar.py
+        Calendar->>CalendarUtils: Использует calendar_utils.py
+        CalendarUtils->>Database: Запросы к БД
+        Database-->>CalendarUtils: Данные
+        CalendarUtils-->>Calendar: Обработанные данные
+        Calendar-->>Main: Формирование ответа
+    else Обычные сообщения
+        Handlers->>Common: Обработка common.py
+        Common->>Models: Работа с данными
+        Models-->>Common: Возврат данных
+        Common-->>Main: Формирование ответа
+    end
+
+    Main->>User: Отправляет ответ
+
+    Note right of Django: Асинхронное взаимодействие
+    Main->>Django: API запрос (при необходимости)
+    Django-->>Main: API ответ
