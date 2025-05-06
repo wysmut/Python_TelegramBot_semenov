@@ -61,7 +61,7 @@ class Calendar:
             return result.fetchall()
 
 def main():
-    from secrets import API_TOKEN
+    from settings.secrets import API_TOKEN
     Base.metadata.create_all(engine)
     
     calendar = Calendar()
