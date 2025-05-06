@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "ice-cream-shop"
-version = "0.1.0"
+name = "telegram-bot-wy"
+version = "0.0.1"
 description = ""
-authors = ["Georgy Borodin <borodin@mybook.ru>"]
+authors = ["dmitrii semenov <info@dxyzsem.ru>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -15,7 +15,6 @@ ptbcontrib = {git = "https://github.com/python-telegram-bot/ptbcontrib.git", rev
 sqladmin = "^0.17.0"
 uvicorn = "^0.30.0"
 itsdangerous = "^2.2.0"
-
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.10.0"
