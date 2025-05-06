@@ -8,8 +8,18 @@ def create_calendar(year=None, month=None):
     now = datetime.now()
     if year is None: year = now.year
     if month is None: month = now.month
-    keyboard = InlineKeyboardMarkup()
-    keyboard.row(InlineKeyboardButton("<<", callback_data=calendar_callback.new("PREV-YEAR", year, month, 0)))
-    keyboard.row(*[InlineKeyboardButton(month, callback_data=calendar_callback.new("SET-MONTH", year, month, i+1)) for i, month in enumerate(["Jan", "Feb", "Mar", "Apr", "May", "Jun"])])
-    keyboard.row(*[InlineKeyboardButton(month, callback_data=calendar_callback.new("SET-MONTH", year, month, i+7)) for i, month in enumerate(["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"])])
+    
+    keyboard = InlineKeyboardMarkup(row_width=7)
+    
+    keyboard.row(
+        InlineKeyboardButton("<<", callback_data=calendar_callback.new("PREV-YEAR", year, month, 0)),
+        InlineKeyboardButton(f"{datetime(year, month, 1).strftime('%B %Y')}", callback_data="IGNORE"),
+        InlineKeyboardButton(">>", callback_data=calendar_callback.new("NEXT-YEAR", year, month, 0))
+    )
+    
+    keyboard.row(*[
+        InlineKeyboardButton(day, callback_data="IGNORE")
+        for day in ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"]
+    ])
+    
     return keyboard
