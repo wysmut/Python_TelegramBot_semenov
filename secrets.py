@@ -3,5 +3,3 @@ DB_HOST = 'localhost'
 DB_NAME = 'calendar_bot'
 DB_USER = 'postgres'
 DB_PASSWORD = 'postgres'
-
-   
