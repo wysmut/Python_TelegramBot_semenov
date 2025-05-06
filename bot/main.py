@@ -1,7 +1,17 @@
-from bot.utils.database import init_db
+import logging
+from aiogram import Bot, Dispatcher, executor
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from bot.handlers import common, calendar, admin
+from bot.secrets import TELEGRAM_TOKEN
 
-def main():
-    # Инициализация БД
-    init_db()
-    
-    # ... остальной код бота ...
+logging.basicConfig(level=logging.INFO)
+storage = MemoryStorage()
+bot = Bot(token=TELEGRAM_TOKEN)
+dp = Dispatcher(bot, storage=storage)
+
+common.register_handlers_common(dp)
+calendar.register_handlers_calendar(dp)
+admin.register_handlers_admin(dp)
+
+if __name__ == '__main__':
+    executor.start_polling(dp, skip_updates=True)
