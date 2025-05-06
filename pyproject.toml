@@ -1,0 +1,26 @@
+[tool.poetry]
+name = "ice-cream-shop"
+version = "0.1.0"
+description = ""
+authors = ["Georgy Borodin <borodin@mybook.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+python-telegram-bot = {version = "^20.0", extras = ["job-queue", "callback-data"]}
+pydantic-settings = "^2.2.1"
+asyncpg = "^0.29.0"
+sqlalchemy = {version = "^2.0.30", extras = ["asyncio"]}
+ptbcontrib = {git = "https://github.com/python-telegram-bot/ptbcontrib.git", rev = "main", extras = ["roles"]}
+sqladmin = "^0.17.0"
+uvicorn = "^0.30.0"
+itsdangerous = "^2.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.10.0"
+asyncpg-stubs = "^0.29.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
