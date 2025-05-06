@@ -66,8 +66,7 @@ class Application(PTBApplication):
     def setup_jobs(self) -> None:
         if self.job_queue is None:
             raise Exception("Job queue missing")
-        _roles_sync = self.job_queue.run_repeating(sync_roles,
-                                                   interval=60)
+        _roles_sync = self.job_queue.run_repeating(sync_roles, interval=60)
 
 
 def configure_logging():
