@@ -1,1 +1,4 @@
-
+Django==3.2
+psycopg2-binary==2.9.1
+aiogram==2.19
+sqlalchemy==1.4.29
