@@ -4,8 +4,8 @@ from telegram.ext import Updater, CommandHandler, CallbackContext
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from infra.base import Base
-from core.users.models import User
-from core.orders.models import Order, Product, OrderedProduct
+from app.core.users.models import User
+from app.core.orders.models import Order, Product, OrderedProduct
 
 engine = create_engine('postgresql+psycopg2://postgres:postgres@localhost/calendar_bot')
 Session = sessionmaker(bind=engine)
