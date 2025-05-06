@@ -1,7 +1,2 @@
-TELEGRAM_API_KEY = '7261571532:AAHJAn2CNE6F5qWrfw-fjDf8l2ESqc088aY'
-DATABASE_URL = 'postgresql://user:password@db:5432/calendar_bot'
-DJANGO_SECRET_KEY = '###'
-DB_HOST = 'localhost'
-DB_NAME = 'calendar_bot'
-DB_USER = 'postgres'
-DB_PASSWORD = 'postgres'
+TELEGRAM_TOKEN = '7261571532:AAHJAn2CNE6F5qWrfw-fjDf8l2ESqc088aY'
+DATABASE_URL = "postgresql://postgres:postgres@localhost/postgres"
