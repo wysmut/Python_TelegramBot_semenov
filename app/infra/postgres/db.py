@@ -27,6 +27,6 @@ class Database:
         async with session:
             try:
                 yield session
-            except Exception:  # noqa: PIE786
+            except Exception:
                 await session.rollback()
                 raise
