@@ -1,4 +1,4 @@
-Проект: Telegram-бот с функцией календаря
+Проект: Telegram-бот
 Dmitrii Semenov
 wysmut
 info@dxyzsem.ru
