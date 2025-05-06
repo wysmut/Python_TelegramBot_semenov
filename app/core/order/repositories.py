@@ -14,46 +14,54 @@ class ProductRepository:
 
     async def list_products(self) -> list[Product]:
         async with self.database.session() as session:
-            query = select(Product)
-            return list(await session.scalars(query))
-
+            result = await session.execute(select(Product))
+            return result.scalars().all()
 
 @dataclass
 class OrderRepository:
     database: Database
 
-    async def create_order(self, user_id: int) -> int:
+    async def create_order(self, user_id: int) -> Order:
         async with self.database.session() as session:
-            insert_stmt = insert(Order).values(user_id=user_id, status=OrderStatusEnum.unlisted)
-            order_id = await session.execute(insert_stmt)
+            order = Order(user_id=user_id, status=OrderStatusEnum.UNLISTED)
+            session.add(order)
             await session.commit()
-            return order_id.scalar()
+            return order
 
-    async def get_order_by_id(self, order_id: int) -> Order | None:
+    async def get_active_order(self, user_id: int) -> Order | None:
         async with self.database.session() as session:
-            query = select(Order).where(Order.id == order_id).options(
-                joinedload(Order.products).joinedload(OrderedProduct.product))
-            return await session.scalar(query)
-
-    async def get_active_order_for_user(self, user_id: int) -> Order | None:
-        async with self.database.session() as session:
-            select_stmt = select(Order).where(
-                and_(Order.user_id == user_id,
-                     Order.status.in_([OrderStatusEnum.unlisted, OrderStatusEnum.ordered]))).options(
-                joinedload(Order.products).joinedload(OrderedProduct.product))
-            return await session.scalar(select_stmt)
+            result = await session.execute(
+                select(Order)
+                .where(and_(
+                    Order.user_id == user_id,
+                    Order.status != OrderStatusEnum.DONE
+                ))
+                .options(joinedload(Order.products).joinedload(OrderedProduct.product))
+            return result.scalars().first()
 
     async def add_product_to_order(self, order_id: int, product_id: int) -> None:
         async with self.database.session() as session:
-            insert_stmt = insert(OrderedProduct).values(order_id=order_id, product_id=product_id, amount=1)
-            upsert_stmt = insert_stmt.on_conflict_do_update(
-                index_elements=[OrderedProduct.order_id, OrderedProduct.product_id],
-                set_={"amount": OrderedProduct.amount + 1})
-            await session.execute(upsert_stmt)
+            await session.execute(
+                insert(OrderedProduct)
+                .values(order_id=order_id, product_id=product_id, quantity=1)
+                .on_conflict_do_update(
+                    constraint="orders_products_pkey",
+                    set_={"quantity": OrderedProduct.quantity + 1}
+                ))
             await session.commit()
 
-    async def set_order_status(self, order_id: int, status: OrderStatusEnum) -> None:
+    async def finish_order(self, order_id: int) -> None:
         async with self.database.session() as session:
-            update_stmt = update(Order).where(Order.id == order_id).values(status=status)
-            await session.execute(update_stmt)
+            await session.execute(
+                update(Order)
+                .where(Order.id == order_id)
+                .values(status=OrderStatusEnum.ORDERED))
+            await session.commit()
+
+    async def complete_order(self, order_id: int) -> None:
+        async with self.database.session() as session:
+            await session.execute(
+                update(Order)
+                .where(Order.id == order_id)
+                .values(status=OrderStatusEnum.DONE))
             await session.commit()
