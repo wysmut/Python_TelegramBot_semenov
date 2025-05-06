@@ -1,6 +1,6 @@
 # Telegram Bot with Calendar and Django
 
-## Setup
+#Установка
 1. Установите требования
 2. Настройте БД
 3. Запустите миграции
