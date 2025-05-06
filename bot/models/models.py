@@ -40,3 +40,35 @@ class SharedEvent(Base):
     
     event = relationship("Event", back_populates="shared_with")
     user = relationship("User", back_populates="shared_events")
+    
+class CalendarEvent(models.Model):
+    # ... существующие поля ...
+    
+    @classmethod
+    def create_from_telegram_event(cls, telegram_event, owner):
+        """Создает событие Django из события Telegram бота"""
+        return cls.objects.create(
+            title=telegram_event.title,
+            description=telegram_event.description,
+            start_time=telegram_event.start_time,
+            end_time=telegram_event.end_time,
+            owner=owner
+        )
+
+    def to_telegram_event(self):
+        """Конвертирует событие Django в формат для Telegram бота"""
+        return {
+            'title': self.title,
+            'description': self.description,
+            'start_time': self.start_time,
+            'end_time': self.end_time
+        }
+
+class UserStats(models.Model):
+    # ... существующие поля ...
+    
+    def update_stats(self):
+        """Обновляет статистику пользователя"""
+        self.events_created = CalendarEvent.objects.filter(owner=self.user).count()
+        self.events_participated = EventParticipation.objects.filter(user=self.user).count()
+        self.save()
